@@ -1,0 +1,46 @@
+name: Test Exec
+
+on: 
+  workflow_dispatch:
+    inputs:
+      debug:
+        description: 'Debug'
+        required: false
+        type: boolean
+
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+  # Allows external webhook trigger
+  repository_dispatch:
+    types:
+      - webhook
+
+jobs:
+
+  texec:
+
+    strategy:
+      matrix: 
+        version:
+          - vera
+          - verb
+          - verc
+          - verd
+
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v4
+        with:
+          show-progress: false
+          # repository: ...
+          # path: ...
+
+      - name: exec
+        run: echo running ${{ matrix.version }} | tee ${{ matrix.version }}.txt
+
+# Allow one concurrent 
+concurrency:
+  group: "mygroup"
+  cancel-in-progress: true
