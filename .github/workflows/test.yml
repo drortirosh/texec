@@ -11,12 +11,12 @@ jobs:
   tmatrix:
     strategy:
       matrix:
-        - name:
-            - big
-            - small
-        - value:
-            - 111
-            - 222
+        name:
+          - big
+          - small
+        value:
+          - 111
+          - 222
     runs-on: ubuntu-latest
     steps:
       - name: step-${{ matrix.name }}-${{matrix.value}}
