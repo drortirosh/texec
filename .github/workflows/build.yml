@@ -38,7 +38,7 @@ jobs:
     needs: build-matrix
     runs-on: ubuntu-latest
     steps:
-      - run echo not showing build-matrix output=needs.build-matrix.outputs.version
+      - run: echo not showing build-matrix output=needs.build-matrix.outputs.version
 
   texec:
     needs: build-matrix
