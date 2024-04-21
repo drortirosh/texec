@@ -14,8 +14,9 @@ jobs:
     runs-on: ubuntu-latest  
     steps:
       - id: setmatrix
+        name: set outputs.matrix
         run: echo matrix='[{"name":"big", "val":"11"}, {"name":"small"}]' >> $GITHUB_OUTPUT
-      - name: out-${{toJson(steps.setmatrix.outputs.matrix)}}
+      - name: =${{steps.setmatrix.outputs.matrix)}}
         run: echo '${{steps.setmatrix.outputs.matrix}}' | jq
 
   tmatrix:
@@ -29,4 +30,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: step-${{ matrix.name }}-${{matrix.value}}
-        run: echo ${{ matrix }}-${{matrix.value}}
+        id: exec
+        run: echo 'output=["name":"${matrix.name}","obj":${{matrix}}] | tee -a $GITHUB_OUTPUT
+    outputs:
+      out: ${{steps.exec.outputs.output}}
+
+  summary:
+    needs: tmatrix
+    runs-on: ubuntu-latest
+    steps:
+      - name: dump
+        run: echo 'summary=${{needs.tmatrix.outputs}}'
