@@ -82,7 +82,7 @@ jobs:
           cat $jsonfile
           echo "testresults=`jq -c . < $jsonfile`" >> $GITHUB_OUTPUT
           summary=`jq -c '.testsuites.testsuite|{"@name","@tests","@errors","@failures","@skipped","@time"}' < $jsonfile`
-          echo "testsummary=$summary | tee $GITHUB_OUTPUT
+          echo "testsummary=$summary" | tee $GITHUB_OUTPUT
 
       - uses: cloudposse/github-action-matrix-outputs-write@v1
         id: matrix-output
