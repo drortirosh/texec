@@ -11,6 +11,8 @@ jobs:
   tmatrix:
     strategy:
       matrix:
+        include:
+          - { name: big, value: 333 }
         name:
           - big
           - small
