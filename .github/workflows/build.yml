@@ -45,7 +45,7 @@ jobs:
           show-progress: false
       - id: stepMatrixBundlers
         run: |
-          bundlers=`ls bundlers/*/*.yml | grep ${{inputs.ymlFilter:-.}}`
+          bundlers=`ls bundlers/*/*.yml | grep ${{inputs.ymlFilter}}.`
           # make a json array
           echo "bundlers=`echo $bundlers|perl -pe 's/(.*)/\"$1\"/'|jq -sc`" | tee -a "$GITHUB_OUTPUT"
 
