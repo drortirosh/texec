@@ -13,13 +13,9 @@ jobs:
       matrix:
         include:
           - { name: big, value: 333 }
-        name:
-          - big
-          - small
-        value:
-          - 111
-          - 222
+          - { name: small, value: 1234 }
     runs-on: ubuntu-latest
     steps:
       - name: step-${{ matrix.name }}-${{matrix.value}}
-        run: echo ${{ matrix.name }}-${{matrix.value}}
+        run: echo ${{ matrix }}-${{matrix.value}}
+        run: echo ${{ toJson(jobs.tmatrix) }}
