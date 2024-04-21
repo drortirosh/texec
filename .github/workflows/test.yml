@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: step-${{ matrix.name }}-${{matrix.val}}
-        id: exec
+        id: tbuild
         run: |
           dump=`echo '${{toJson(matrix)}}' | jq -c`
           echo "output={\"name\":\"${{matrix.name}}\",\"obj\":$dump}" | tee -a $GITHUB_OUTPUT
@@ -41,7 +41,7 @@ jobs:
           matrix-step-name: ${{ github.job }}
           matrix-key: ${{ matrix.name }}
           outputs: |-
-            out: ${{ steps.exec.outputs.output }}
+            out: xx-${{ steps.tbuild.outputs.output }}
 
   ## Read matrix outputs 
   read:
@@ -51,7 +51,9 @@ jobs:
       - uses: cloudposse/github-action-matrix-outputs-read@v1
         id: read
         with:
-          matrix-step-name: exec
+          matrix-step-name: tmatrix
+
+      - run: echo read-res=${{steps.read.outputs.result}}
 
     outputs:
       result: "${{ steps.read.outputs.result }}"
@@ -61,10 +63,5 @@ jobs:
     if: ${{always()}}
     runs-on: ubuntu-latest
     steps:
-      - uses: cloudposse/github-action-matrix-outputs-read@v1
-        id: read
-        with:
-          matrix-step-name: exec
-
       - name: dump
-        run: echo 'summary=${{toJson(needs.read.outputs)}}'
+        run: echo 'summary=${{needs.read.outputs.result}}'
