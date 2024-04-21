@@ -54,9 +54,9 @@ jobs:
 
   bundler-tests:
     needs: create-bundlers-list
-    strategy:
-      matrix: 
-        include: ${{ fromJson(needs.create-bundlers-list.outputs.matrix) }}
+    # strategy:
+    #   matrix: 
+    #     include: ${{ fromJson(needs.create-bundlers-list.outputs.matrix) }}
 
     runs-on: ubuntu-latest
     steps:
@@ -68,6 +68,7 @@ jobs:
       - id: runtest
         name: testing ${{ matrix.bundler }}
         run: |
+          echo matrix=${{ needs.create-bundlers-list.outputs.matrix }}
           pytestArgs=${{inputs.pytest-args}}
           echo pytest-args=${pytestArgs:=-k gasp}
           OUTFOLDER=./build ./runbundler/runbundler.sh ${{ matrix.path }} test $pytestArgs
