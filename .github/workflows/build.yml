@@ -40,8 +40,11 @@ jobs:
       - env:
           OUTPUT1: ${{needs.job1.outputs.output1}}
           OUTPUT2: ${{needs.job1.outputs.output2}}
-        run: echo "$OUTPUT1 $OUTPUT2"
-        run: echo "all outputs: ${{ toJson(needs.job1) }}"
+        run: echo "$OUTPUT1 $OUTPUT2 2=${{needs.job1.outputs.output2}}"
+      - run: |
+          cat <<EOF  
+          all = ${{ toJson(needs.job1) }}
+          EOF
 
   buildMatrix:
     runs-on: ubuntu-latest
