@@ -24,7 +24,7 @@ jobs:
   buildMatrix:
     runs-on: ubuntu-latest
     outputs:
-      version: ${{toJson(steps.setVersion.outputs.version)}}
+      version: ${{steps.setVersion.outputs.version}}
     steps:
       - uses: actions/checkout@v4
         with:
