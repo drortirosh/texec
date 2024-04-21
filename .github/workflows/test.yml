@@ -10,7 +10,7 @@ jobs:
 
   makematrix:
     outputs:
-      matrix: setmatrix.outputs.matrix
+      matrix: ${{setmatrix.outputs.matrix}}
     runs-on: ubuntu-latest  
     steps:
       - id: setmatrix
