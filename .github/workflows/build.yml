@@ -53,7 +53,7 @@ jobs:
           echo matrix=$matrix | tee $GITHUB_OUTPUT
 
   bundler-tests:
-    name: [ ${{matrix.bundler}} ]
+    name: "[ ${{matrix.bundler}} ]"
     # needs: create-matrix
     strategy:
       matrix: 
