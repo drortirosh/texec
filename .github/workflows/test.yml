@@ -43,4 +43,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: dump
-        run: echo 'summary=${{toJson(needs.tmatrix.outputs)}}'
+        run: echo 'summary=${{(needs.tmatrix.outputs.output)}}'
