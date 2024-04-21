@@ -49,7 +49,7 @@ jobs:
           bundlers=`ls bundlers/*/*.yml | grep ${{inputs.ymlFilter}}.`
           # make each yml file into a json object in the array array:
           # [ {"bundler":"aabundler", "path":"bundlers/aabundler/aabundler.yml"} ]
-          matrix=`echo $bundlers | perl -pe 's/(\S*?\/(\S*?)\/\S*)/{"bundler":"$1","path":"$2"}\n/g' | jq -sc`
+          matrix=`echo $bundlers | perl -pe 's/(\S*?\/(\S*?)\/\S*)/{"path":"$1","bundler":"$2"}\n/g' | jq -sc`
           echo matrix=$matrix | tee $GITHUB_OUTPUT
 
   bundler-tests:
