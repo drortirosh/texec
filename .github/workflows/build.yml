@@ -24,6 +24,9 @@ jobs:
   build-matrix:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          show-progress: false
       - run: pwd; find .
       - run: echo version=`ls dir/|perl -pe 's/(.*)/"$1"/'|jq -sc` > $GITHUB_OUTPUT
 
