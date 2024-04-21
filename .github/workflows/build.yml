@@ -29,7 +29,7 @@ jobs:
   texec:
     needs: build-matrix
     strategy:
-      matrix: ${{ neesds.build-matrix.outputs.version}}
+      matrix: ${{ needs.build-matrix.outputs.version}}
 
     runs-on: ubuntu-latest
     steps:
