@@ -77,7 +77,7 @@ jobs:
           base=$OUTFOLDER/${{ matrix.bundler }}
           ./runbundler/runbundler.sh ${{ matrix.path }} test $pytestArgs | tee $base.txt
           # ./runbundler/runbundler.sh ${{ matrix.path }} logs > $base.log
-          jsonfile=build/*.json
+          jsonfile=`ls build/*.json`
           echo jsonfile=$jsonfile
           echo -n "testresults=`jq -c . < $jsonfile`" >> "$GITHUB_OUTPUT"
           jqsummary='.testsuites.testsuite|{"@name","@tests","@errors","@failures","@skipped","@time"}'
