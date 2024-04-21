@@ -29,10 +29,7 @@ jobs:
   buildMatrix:
     runs-on: ubuntu-latest
     outputs:
-      matrix:  ${{         steps.setVersion.outputs.version }}
-      tojson:   ${{  toJson(steps.setVersion.outputs.version)}}
-      #fails: outputs must be strings, not objects: "A sequence not accepted"
-      #fromjson: ${{fromJson(steps.setVersion.outputs.version)}}
+      matrix:  ${{ steps.setVersion.outputs.version }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -41,28 +38,18 @@ jobs:
         id: setVersion
       #https://stackoverflow.com/questions/59175332/using-output-from-a-previous-job-in-a-new-one-in-a-github-action
 
-  staticMatrix:
-    strategy:
-      matrix:
-        item:
-          - first
-          - second
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo ${{matrix.item}}
-
   check-matrix:
-    needs: [ staticMatrix, buildMatrix ]
+    needs: buildMatrix
     runs-on: ubuntu-latest
     if: ${{ always()}}
     steps:
-      - run: echo "staticMatrix ${{toJson(needs.staticMatrix)}}"
       - run: echo "buildMatrix ${{toJson(needs.buildMatrix.outputs.matrix)}}"
 
   texec:
     needs: buildMatrix
     strategy:
-      matrix: ${{ fromJson(needs.buildMatrix.outputs.matrix) }}
+      matrix:
+        version: ${{ fromJson(needs.buildMatrix.outputs.matrix) }}
 
     runs-on: ubuntu-latest
     steps:
