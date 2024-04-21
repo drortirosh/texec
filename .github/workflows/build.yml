@@ -66,7 +66,9 @@ jobs:
       - id: runtest
         name: testing ${{ matrix.bundler }}
         run: |
-          OUTFOLDER=./build ./runbundler/runbundler.sh ${{ matrix.bundler }} test ${{ inputs.pytest-args }}
+          pytestArgs=${{inputs.pytest-args}}
+          echo pytest-args=${pytestArgs:=-k gasp}
+          OUTFOLDER=./build ./runbundler/runbundler.sh ${{ matrix.bundler }} test $pytestArgs
           echo -n "results=" >> "$GITHUB_OUTPUT"
           jq -c . ./build/out/*.json >> "$GITHUB_OUTPUT"
           echo -n "summary=" >> "$GITHUB_OUTPUT"
