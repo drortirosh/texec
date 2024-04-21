@@ -25,17 +25,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        id: build1
         with:
           show-progress: false
       - run: pwd; find .
       - run: echo version=`ls dir/|perl -pe 's/(.*)/"$1"/'|jq -sc` > $GITHUB_OUTPUT
+      #https://stackoverflow.com/questions/59175332/using-output-from-a-previous-job-in-a-new-one-in-a-github-action
+    outputs:
+      version: steps.build1.outputs.version
 
   check-matrix:
     needs: build-matrix
     runs-on: ubuntu-latest
     steps:
-      - run echo build-matrix output= "${{ toJson( jobs.build-matrix.outputs ) }}"
-      - run echo build-matrix "jobs= ${{ toJson( jobs ) }}"
+      - run echo build-matrix output=${{needs.build-matrix.outputs.version}}
 
   texec:
     needs: build-matrix
