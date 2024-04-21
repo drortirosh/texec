@@ -39,7 +39,7 @@ jobs:
   create-bundlers-list:
     runs-on: ubuntu-latest
     outputs:
-      bundlers:  ${{ steps.stepMatrixBundlers.outputs.bundlers }}
+      bundlers:  ${{ steps.stepMatrixBundlers.outputs.matrix }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -47,14 +47,13 @@ jobs:
       - id: stepMatrixBundlers
         run: |
           bundlers=`ls bundlers/*/*.yml | grep ${{inputs.ymlFilter}}.`
-          # make a json array
-          echo "bundlers=`echo $bundlers|perl -pe 's/(.*)/\"$1\"/'|jq -sc`" | tee -a "$GITHUB_OUTPUT"
+          # make a json array: [ {"bundler":"aabundler", "path:"./bundlers/aabundler/aabundler.yml"} ]
+          echo "matrix=`echo $bundlers|perl -pe 's/(.*?\/(.*?)\/.*)/{^bundler^:^$1^,^path^:^$2^}/'|tr ^ \"|jq -sc`" | tee -a "$GITHUB_OUTPUT"
 
   bundler-tests:
     needs: create-bundlers-list
     strategy:
-      matrix:
-        bundler: ${{ fromJson(needs.create-bundlers-list.outputs.bundlers) }}
+      matrix: ${{ fromJson(needs.create-bundlers-list.outputs.matrix) }}
 
     runs-on: ubuntu-latest
     steps:
@@ -68,7 +67,7 @@ jobs:
         run: |
           pytestArgs=${{inputs.pytest-args}}
           echo pytest-args=${pytestArgs:=-k gasp}
-          OUTFOLDER=./build ./runbundler/runbundler.sh ${{ matrix.bundler }} test $pytestArgs
+          OUTFOLDER=./build ./runbundler/runbundler.sh ${{ matrix.path }} test $pytestArgs
           find *
           echo -n "results=" >> "$GITHUB_OUTPUT"
           jq -c . ./build/*.json >> "$GITHUB_OUTPUT"
@@ -81,7 +80,7 @@ jobs:
           matrix-step-name: ${{ github.job }}
           matrix-key: bundler
           outputs: |-
-            name: ${{ steps.runtest.outputs.results }}
+            ${{matrix.bundler}}: ${{ steps.runtest.outputs.results }}
 
       - name: Push build output to artifacts
         uses: actions/upload-artifact@v4
@@ -100,7 +99,7 @@ jobs:
           matrix-step-name: bundler-tests
           matrix-key: ${{ matrix.bundler }}
       - run: echo "all outputs=${{steps.read.outputs.result}}"
-      - run: echo '${{steps.read.outputs}}' | jq
+      - run: echo '${{toJson(steps.read.outputs)}}' | jq
     # outputs:
     #     result: "${{ toJSON(steps.read.outputs) }}"
 
