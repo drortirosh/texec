@@ -55,7 +55,8 @@ jobs:
   bundler-tests:
     needs: create-bundlers-list
     strategy:
-      matrix: ${{ fromJson(needs.create-bundlers-list.outputs.matrix) }}
+      matrix: 
+        include: ${{ fromJson(needs.create-bundlers-list.outputs.matrix) }}
 
     runs-on: ubuntu-latest
     steps:
