@@ -50,15 +50,15 @@ jobs:
           # make each yml file into a json object in the array array:
           # [ {"bundler":"aabundler", "path":"bundlers/aabundler/aabundler.yml"} ]
           matrix=`echo $bundlers | perl -pe 's/(\S*?\/(\S*?)\/\S*)/{"bundler":"$1","path":"$2"}\n/g' | jq -sc`
-          echo matrix=$matrix >> $GITHUB_OUTPUT
-          echo matrix=$matrix
+          echo matrix=$matrix | tee $GITHUB_OUTPUT
 
   bundler-tests:
     name: TestBundler ${{matrix.bundler}}
-    needs: create-matrix
+    # needs: create-matrix
     strategy:
       matrix: 
-        include: ${{ fromJson(needs.create-matrix.outputs.matrix) }}
+        include: [{"bundler":"bundlers/aabundler/aabundler.yml","path":"aabundler"},{"bundler":"bundlers/okbund/okbund.yml","path":"okbund"}]
+          # ${{ fromJson(needs.create-matrix.outputs.matrix) }}
 
     runs-on: ubuntu-latest
     steps:
