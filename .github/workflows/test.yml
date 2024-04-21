@@ -15,10 +15,8 @@ jobs:
     steps:
       - id: setmatrix
         run: echo matrix='[{"name":"big", "val":"11"}, {"name":"small"}]' >> $GITHUB_OUTPUT
-      - name: out-${{steps.setmatrix.outputs.matrix}}
-        run: echo 1
-      - name: out-${{toJson(steps.setmatrix.outputs.matrix.*.name)}}
-        run: echo ${{steps.setmatrix.outputs.matrix}}|jq
+      - name: out-${{toJson(steps.setmatrix.outputs.matrix)}}
+        run: echo '${{steps.setmatrix.outputs.matrix}}' | jq
 
   tmatrix:
     name: someName
