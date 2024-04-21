@@ -34,8 +34,8 @@ jobs:
     needs: build-matrix
     runs-on: ubuntu-latest
     steps:
-      - run echo build-matrix output= "${{ toJson( needs.build-matrix.outputs ) }}"
-      - run echo build-matrix "needs= ${{ toJson( needs.build-matrix ) }}"
+      - run echo build-matrix output= "${{ toJson( jobs.build-matrix.outputs ) }}"
+      - run echo build-matrix "jobs= ${{ toJson( jobs ) }}"
 
   texec:
     needs: build-matrix
