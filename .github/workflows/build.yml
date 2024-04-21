@@ -54,6 +54,7 @@ jobs:
           # path: ...
 
       - id: exec
+        name: running ${{matrix.version}}
         run: echo 'out=${{matrix.version}}' | tee ${{matrix.version}}.out.txt >> $GITHUB_OUTPUT
 
       - uses: cloudposse/github-action-matrix-outputs-write@v1
@@ -83,7 +84,7 @@ jobs:
           matrix-step-name: texec
           matrix-key: ${{ matrix.version }}
       - run: echo "all outputs=${{steps.read.outputs.result}}"
-      - run: echo "${{steps.read.outputs.result}}" | jq
+      - run: echo '${{steps.read.outputs.result}}' | jq
     # outputs:
     #     result: "${{ toJSON(steps.read.outputs) }}"
 
