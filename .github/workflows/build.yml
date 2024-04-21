@@ -38,13 +38,6 @@ jobs:
         id: setVersion
       #https://stackoverflow.com/questions/59175332/using-output-from-a-previous-job-in-a-new-one-in-a-github-action
 
-  check-matrix:
-    needs: buildMatrix
-    runs-on: ubuntu-latest
-    if: ${{ always()}}
-    steps:
-      - run: echo "buildMatrix ${{toJson(needs.buildMatrix.outputs.matrix)}}"
-
   texec:
     needs: buildMatrix
     strategy:
@@ -89,22 +82,8 @@ jobs:
         with:
           matrix-step-name: texec
           matrix-key: ${{ matrix.version }}
-      - run: |
-          cat <<EOF  
-          steps.read = ${{ toJSON(steps.read)}} 
-          EOF
-    outputs:
-        result: "${{ toJSON(steps.read.outputs) }}"
-
-
-#sample from: https://docs.github.com/en/actions/using-jobs/defining-outputs-for-jobs
-  job2:
-    runs-on: ubuntu-latest
-    needs:
-      - buildMatrix
-    steps:
-      - run: |
-          cat <<EOF  
-          all = ${{ toJson(needs) }}
-          EOF
+      - run: echo "all outputs=${{steps.read.outputs.result}}"
+      - run: echo "${{steps.read.outputs.result}}" | jq
+    # outputs:
+    #     result: "${{ toJSON(steps.read.outputs) }}"
 
