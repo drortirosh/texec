@@ -43,8 +43,21 @@ jobs:
           outputs: |-
             out: ${{ steps.exec.outputs.output }}
 
+  ## Read matrix outputs 
+  read:
+    runs-on: ubuntu-latest
+    needs: [tmatrix]
+    steps:
+      - uses: cloudposse/github-action-matrix-outputs-read@v1
+        id: read
+        with:
+          matrix-step-name: exec
+
+    outputs:
+      result: "${{ steps.read.outputs.result }}"
+
   summary:
-    needs: tmatrix
+    needs: read
     if: ${{always()}}
     runs-on: ubuntu-latest
     steps:
@@ -54,4 +67,4 @@ jobs:
           matrix-step-name: exec
 
       - name: dump
-        run: echo 'summary=${{toJson(steps.read.outputs)}}'
+        run: echo 'summary=${{toJson(needs.read.outputs)}}'
