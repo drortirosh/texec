@@ -42,9 +42,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           show-progress: false
-      - run: echo "dirs=`ls dir` >> "$GITHUB_OUTPUT"
+      - run: echo "dirs=`ls dir`" >> "$GITHUB_OUTPUT"
         id: dir
-      - run: echo version=`ls dir/|perl -pe 's/(.*)/"$1"/'|jq -sc` >> "$GITHUB_OUTPUT"
+      - run: echo "version=`ls dir/|perl -pe 's/(.*)/\"$1\"/'|jq -sc`" | tee -a "$GITHUB_OUTPUT"
         id: verions
       #https://stackoverflow.com/questions/59175332/using-output-from-a-previous-job-in-a-new-one-in-a-github-action
 
