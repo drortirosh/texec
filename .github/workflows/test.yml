@@ -8,14 +8,21 @@ on:
 
 jobs:
 
+  makematrix:
+    outputs:
+      matrix: setmatrix.outputs.matrix
+    steps:
+      - id: setmatrix
+        run: echo matrix='[{"name":"big", "val":"11"}, {"name":"small"}]' >> $GITHUB_OUTPUT
+
   tmatrix:
+    needs: makematrix
     strategy:
       matrix:
-        include:
-          - { name: big, value: 333 }
-          - { name: small, value: 1234 }
+        include: ${{ toJson(needs.makematrix.outputs.matrix)}}
+          # - { name: big, value: 333 }
+          # - { name: small, value: 1234 }
     runs-on: ubuntu-latest
     steps:
       - name: step-${{ matrix.name }}-${{matrix.value}}
         run: echo ${{ matrix }}-${{matrix.value}}
-      - run: echo ${{ toJson(jobs.tmatrix) }}
