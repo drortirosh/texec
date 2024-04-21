@@ -74,9 +74,9 @@ jobs:
           echo pytest-args=${pytestArgs:=-k gasp}
           mkdir ./build
           export OUTFOLDER=./build
-          base=.$OUTFOLDER/${{ matrix.bundler }}
+          base=$OUTFOLDER/${{ matrix.bundler }}
           ./runbundler/runbundler.sh ${{ matrix.path }} test $pytestArgs | tee $base.txt
-          ./runbundler/runbundler.sh ${{ matrix.path }} logs > $base.log
+          # ./runbundler/runbundler.sh ${{ matrix.path }} logs > $base.log
           jsonfile=build/*.json
           echo jsonfile=$jsonfile
           echo -n "testresults=`jq -c . < $jsonfile`" >> "$GITHUB_OUTPUT"
