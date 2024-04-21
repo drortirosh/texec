@@ -29,14 +29,15 @@ jobs:
           # - { name: small, value: 1234 }
     runs-on: ubuntu-latest
     steps:
-      - name: step-${{ matrix.name }}-${{matrix.value}}
+      - name: step-${{ matrix.name }}-${{matrix.val}}
         id: exec
-        run: echo 'output=["name":"${matrix.name}","obj":${{matrix}}] | tee -a $GITHUB_OUTPUT
+        run: echo 'output=["name":"${matrix.name}","obj":${{toJson(matrix)}}]' | tee -a $GITHUB_OUTPUT
     outputs:
       out: ${{steps.exec.outputs.output}}
 
   summary:
     needs: tmatrix
+    if: ${{always()}}
     runs-on: ubuntu-latest
     steps:
       - name: dump
