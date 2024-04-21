@@ -33,7 +33,7 @@ jobs:
         id: exec
         run: |
           dump=`echo '${{toJson(matrix)}}' | jq -c`
-          echo 'output=["name":"${matrix.name}","obj":$dump]' | tee -a $GITHUB_OUTPUT
+          echo "output=[\"name\":\"${{matrix.name}}\",\"obj\":$dump]" | tee -a $GITHUB_OUTPUT
     outputs:
       output: ${{steps.exec.outputs.output}}
 
