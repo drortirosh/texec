@@ -32,7 +32,7 @@ jobs:
       - run: echo version=`ls dir/|perl -pe 's/(.*)/"$1"/'|jq -sc` > $GITHUB_OUTPUT
       #https://stackoverflow.com/questions/59175332/using-output-from-a-previous-job-in-a-new-one-in-a-github-action
     outputs:
-      version: steps.build1.outputs.version
+      version: ${{steps.build1.outputs.version}}
 
   check-matrix:
     needs: buildMatrix
