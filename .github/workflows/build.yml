@@ -79,9 +79,10 @@ jobs:
           # ./runbundler/runbundler.sh ${{ matrix.path }} logs > $base.log
           jsonfile=`ls build/*.json`
           echo jsonfile=$jsonfile
-          echo -n "testresults=`jq -c . < $jsonfile`" >> "$GITHUB_OUTPUT"
-          jqsummary='.testsuites.testsuite|{"@name","@tests","@errors","@failures","@skipped","@time"}'
-          echo "testsummary=`jq -c \'$jqsummary\' < $jsonfile`" | tee $GITHUB_OUTPUT
+          cat $jsonfile
+          echo "testresults=`jq -c . < $jsonfile`" >> $GITHUB_OUTPUT
+          # jqsummary='.testsuites.testsuite|{"@name","@tests","@errors","@failures","@skipped","@time"}'
+          # echo "testsummary=`jq -c \'$jqsummary\' < $jsonfile`" | tee $GITHUB_OUTPUT
 
       - uses: cloudposse/github-action-matrix-outputs-write@v1
         id: matrix-output
