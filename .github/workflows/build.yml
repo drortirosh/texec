@@ -43,11 +43,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           show-progress: false
-      - run: |
-        bundlers=`ls bundlers/*/*.yml | grep ${{inputs.ymlFilter:-.}}`
-        #make a json array
-        echo "bundlers=`echo $bundlers|perl -pe 's/(.*)/\"$1\"/'|jq -sc`" | tee -a "$GITHUB_OUTPUT"
-        id: stepMatrixBundlers
+      - id: stepMatrixBundlers
+        run: |
+          bundlers=`ls bundlers/*/*.yml | grep ${{inputs.ymlFilter:-.}}`
+          # make a json array
+          echo "bundlers=`echo $bundlers|perl -pe 's/(.*)/\"$1\"/'|jq -sc`" | tee -a "$GITHUB_OUTPUT"
 
   bundler-tests:
     needs: create-bundlers-list
