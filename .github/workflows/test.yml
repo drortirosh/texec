@@ -41,27 +41,18 @@ jobs:
           matrix-step-name: ${{ github.job }}
           matrix-key: ${{ matrix.name }}
           outputs: |-
-            out: xx-${{ steps.tbuild.outputs.output }}
+            out: ${{ steps.tbuild.outputs.output }}
 
-  ## Read matrix outputs 
-  read:
+
+  summary:
+    needs: tmatrix
+    if: ${{always()}}
     runs-on: ubuntu-latest
-    needs: [tmatrix]
     steps:
       - uses: cloudposse/github-action-matrix-outputs-read@v1
         id: read
         with:
           matrix-step-name: tmatrix
 
-      - run: echo read-res=${{steps.read.outputs.result}}
-
-    outputs:
-      result: "${{ steps.read.outputs.result }}"
-
-  summary:
-    needs: read
-    if: ${{always()}}
-    runs-on: ubuntu-latest
-    steps:
       - name: dump
-        run: echo 'summary=${{needs.read.outputs.result}}'
+        run: echo 'summary=${{steps.read.outputs.result}}'
