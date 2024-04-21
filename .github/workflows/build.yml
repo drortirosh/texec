@@ -77,13 +77,13 @@ jobs:
           echo -n "summary=" >> "$GITHUB_OUTPUT"
           cat ./build/*.json | jq '.testsuites.testsuite | { "@name", "@tests", "@errors", "@failures", "@skipped", "@time" }' -c >> "$GITHUB_OUTPUT"
 
-      - uses: cloudposse/github-action-matrix-outputs-write@v1
-        id: matrix-output
-        with:
-          matrix-step-name: ${{ github.job }}
-          matrix-key: bundler
-          outputs: |-
-            ${{matrix.bundler}}: ${{ steps.runtest.outputs.results }}
+      # - uses: cloudposse/github-action-matrix-outputs-write@v1
+      #   id: matrix-output
+      #   with:
+      #     matrix-step-name: ${{ github.job }}
+      #     matrix-key: bundler
+      #     outputs: |-
+      #       ${{matrix.bundler}}: ${{ steps.runtest.outputs.results }}
 
       - name: Push build output to artifacts
         uses: actions/upload-artifact@v4
