@@ -37,8 +37,8 @@ jobs:
   check-matrix:
     needs: build-matrix
     runs-on: ubuntu-latest
-    # steps:
-    #   - run echo build-matrix output=${{needs.build-matrix.outputs.version}}
+    steps:
+      - run echo not showing build-matrix output=needs.build-matrix.outputs.version
 
   texec:
     needs: build-matrix
