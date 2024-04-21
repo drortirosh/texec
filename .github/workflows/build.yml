@@ -20,23 +20,33 @@ on:
       - webhook
 
 jobs:
+  job1:
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      output1: ${{ steps.step1.outputs.test }}
+      output2: ${{ steps.step2.outputs.test }}
+    steps:
+      - id: step1
+        run: echo "test=hello" >> "$GITHUB_OUTPUT"
+      - id: step2
+        run: echo "test=world" >> "$GITHUB_OUTPUT"
+
   buildMatrix:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{toJson(steps.versions.outputs)}}
+      dirs: ${{steps.dir.outputs.dirs}}
+      all: ${{toJson(steps)}}
     steps:
       - uses: actions/checkout@v4
-        id: build1
         with:
           show-progress: false
-      - run: pwd; find .
-      - run: echo version=`ls dir/|perl -pe 's/(.*)/"$1"/'|jq -sc` >> $GITHUB_OUTPUT
-      - run: echo something=else >> $GITHUB_OUTPUT
+      - run: echo "dirs=`ls dir` >> "$GITHUB_OUTPUT"
+        id: dir
+      - run: echo version=`ls dir/|perl -pe 's/(.*)/"$1"/'|jq -sc` >> "$GITHUB_OUTPUT"
+        id: verions
       #https://stackoverflow.com/questions/59175332/using-output-from-a-previous-job-in-a-new-one-in-a-github-action
-    outputs:
-      another: another-output
-      version: ${{toJson(steps.build1.outputs)}}
-      something: xx-${{steps.build1.outputs.something}}-yy
-      join: ${{join(steps.build1.outputs,',')}}
-      else: asdasd
 
   check-matrix:
     needs: buildMatrix
@@ -96,17 +106,6 @@ jobs:
 
 
 #sample from: https://docs.github.com/en/actions/using-jobs/defining-outputs-for-jobs
-  job1:
-    runs-on: ubuntu-latest
-    # Map a step output to a job output
-    outputs:
-      output1: ${{ steps.step1.outputs.test }}
-      output2: ${{ steps.step2.outputs.test }}
-    steps:
-      - id: step1
-        run: echo "test=hello" >> "$GITHUB_OUTPUT"
-      - id: step2
-        run: echo "test=world" >> "$GITHUB_OUTPUT"
   job2:
     runs-on: ubuntu-latest
     needs:
