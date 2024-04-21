@@ -35,7 +35,9 @@ jobs:
     outputs:
       another: another-output
       version: ${{toJson(steps.build1.outputs)}}
-      something: ${{steps.build1.outputs.something}}
+      something: xx-${{steps.build1.outputs.something}}-yy
+      join: ${{join(steps.build1.outputs,",")}}
+      else: asdasd
 
   check-matrix:
     needs: buildMatrix
