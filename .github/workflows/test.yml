@@ -18,4 +18,4 @@ jobs:
     steps:
       - name: step-${{ matrix.name }}-${{matrix.value}}
         run: echo ${{ matrix }}-${{matrix.value}}
-        run: echo ${{ toJson(jobs.tmatrix) }}
+      - run: echo ${{ toJson(jobs.tmatrix) }}
