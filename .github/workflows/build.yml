@@ -36,17 +36,13 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{toJson(steps.versions.outputs)}}
-      all: ${{toJson(steps)}}
+      all: ${{toJson(steps.*.outputs)}}
     steps:
       - uses: actions/checkout@v4
         with:
           show-progress: false
-      - run: echo asd=ASD >> $GITHUB_OUTPUT
-        id: asd
-      - run: echo dsa=DSA >> "$GITHUB_OUTPUT"
-        id: dsa
       - run: echo "version=`ls dir/|perl -pe 's/(.*)/\"$1\"/'|jq -sc`" | tee -a "$GITHUB_OUTPUT"
-        id: verions
+        id: version
       #https://stackoverflow.com/questions/59175332/using-output-from-a-previous-job-in-a-new-one-in-a-github-action
 
   check-matrix:
