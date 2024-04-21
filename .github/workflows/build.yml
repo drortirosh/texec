@@ -57,7 +57,7 @@ jobs:
     # needs: create-matrix
     strategy:
       matrix: 
-        include: [{"bundler":"bundlers/aabundler/aabundler.yml","path":"aabundler"},{"bundler":"bundlers/okbund/okbund.yml","path":"okbund"}]
+        include: [{"path":"bundlers/aabundler/aabundler.yml","bundler":"aabundler"},{"path":"bundlers/okbund/okbund.yml","bundler":"okbund"}]
           # ${{ fromJson(needs.create-matrix.outputs.matrix) }}
 
     runs-on: ubuntu-latest
