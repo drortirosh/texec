@@ -20,6 +20,7 @@ on:
       pytest-args:
         description: 'Extra pytest args'
         type: string
+        default: -k gasp
         required: false
 
   push:
@@ -65,7 +66,7 @@ jobs:
       - id: runtest
         name: testing ${{ matrix.bundler }}
         run: |
-          OUTFOLDER=./build ./runbundler/runbundler.sh test ${{ matrix.bundler }} ${{ inputs.pytest-args }}
+          OUTFOLDER=./build ./runbundler/runbundler.sh ${{ matrix.bundler }} test ${{ inputs.pytest-args }}
           echo "results="`jq -c . ./build/out/*.json" >> "$GITHUB_OUTPUT"
 
       - uses: cloudposse/github-action-matrix-outputs-write@v1
