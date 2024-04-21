@@ -20,7 +20,7 @@ jobs:
     needs: makematrix
     strategy:
       matrix:
-        include: ${{ toJson(needs.makematrix.outputs.matrix)}}
+        include: ${{ fromJson(needs.makematrix.outputs.matrix)}}
           # - { name: big, value: 333 }
           # - { name: small, value: 1234 }
     runs-on: ubuntu-latest
