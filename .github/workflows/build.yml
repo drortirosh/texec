@@ -69,6 +69,7 @@ jobs:
           pytestArgs=${{inputs.pytest-args}}
           echo pytest-args=${pytestArgs:=-k gasp}
           OUTFOLDER=./build ./runbundler/runbundler.sh ${{ matrix.bundler }} test $pytestArgs
+          find *
           echo -n "results=" >> "$GITHUB_OUTPUT"
           jq -c . ./build/out/*.json >> "$GITHUB_OUTPUT"
           echo -n "summary=" >> "$GITHUB_OUTPUT"
