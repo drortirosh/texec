@@ -17,6 +17,7 @@ jobs:
         run: echo matrix='[{"name":"big", "val":"11"}, {"name":"small"}]' >> $GITHUB_OUTPUT
 
   tmatrix:
+    name: someName
     needs: makematrix
     strategy:
       matrix:
