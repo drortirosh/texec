@@ -23,7 +23,8 @@ jobs:
 
   build-matrix:
     runs-on: ubuntu-latest
-    run: echo version=`ls dir/|perl -pe 's/(.*)/"$1"/'|jq -sc` > $GITHUB_OUTPUT
+    steps:
+      run: echo version=`ls dir/|perl -pe 's/(.*)/"$1"/'|jq -sc` > $GITHUB_OUTPUT
 
   texec:
     needs: build-matrix
