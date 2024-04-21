@@ -11,6 +11,7 @@ jobs:
   makematrix:
     outputs:
       matrix: setmatrix.outputs.matrix
+    runs-on: ubuntu-latest  
     steps:
       - id: setmatrix
         run: echo matrix='[{"name":"big", "val":"11"}, {"name":"small"}]' >> $GITHUB_OUTPUT
