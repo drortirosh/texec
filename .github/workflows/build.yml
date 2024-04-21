@@ -21,7 +21,7 @@ on:
 
 jobs:
 
-  build-matrix:
+  buildMatrix:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -35,15 +35,15 @@ jobs:
       version: steps.build1.outputs.version
 
   check-matrix:
-    needs: build-matrix
+    needs: buildMatrix
     runs-on: ubuntu-latest
     steps:
-      - run: echo not showing build-matrix output=needs.build-matrix.outputs.version
+      - run: echo showing buildMatrix output=${{needs.buildMatrix.outputs.version}}
 
   texec:
-    needs: build-matrix
+    needs: buildMatrix
     strategy:
-      matrix: ${{ needs.build-matrix.outputs.version}}
+      matrix: ${{ needs.buildMatrix.outputs.version}}
 
     runs-on: ubuntu-latest
     steps:
