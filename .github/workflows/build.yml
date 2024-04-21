@@ -29,11 +29,13 @@ jobs:
         with:
           show-progress: false
       - run: pwd; find .
-      - run: echo version=`ls dir/|perl -pe 's/(.*)/"$1"/'|jq -sc` > $GITHUB_OUTPUT
+      - run: echo version=`ls dir/|perl -pe 's/(.*)/"$1"/'|jq -sc` >> $GITHUB_OUTPUT
+      - run: echo something=else >> $GITHUB_OUTPUT
       #https://stackoverflow.com/questions/59175332/using-output-from-a-previous-job-in-a-new-one-in-a-github-action
     outputs:
       another: another-output
       version: ${{toJson(steps.build1.outputs)}}
+      something: ${{steps.build1.outputs.something}}
 
   check-matrix:
     needs: buildMatrix
