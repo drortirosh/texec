@@ -1,10 +1,9 @@
 name: test matrix
 
 
-on:
-  push:
-    branches: '**'
-
+# on:
+#   push:
+#     branches: '**'
 
 jobs:
 

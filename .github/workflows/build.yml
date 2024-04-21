@@ -23,8 +23,8 @@ on:
         default: -k gasp
         required: false
 
-  # push:
-  #   branches: '**'
+  push:
+    branches: '**'
 
   # pull_request:
   #   types: [opened, reopened, synchronize]
@@ -36,15 +36,15 @@ on:
 
 jobs:
 
-  create-bundlers-list:
+  create-matrix:
     runs-on: ubuntu-latest
     outputs:
-      bundlers:  ${{ steps.stepMatrixBundlers.outputs.matrix }}
+      bundlers:  ${{ steps.create-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v4
         with:
           show-progress: false
-      - id: stepMatrixBundlers
+      - id: create-matrix
         run: |
           bundlers=`ls bundlers/*/*.yml | grep ${{inputs.ymlFilter}}.`
           # make each yml file into a json object in the array array:
@@ -54,10 +54,11 @@ jobs:
           echo matrix=$matrix
 
   bundler-tests:
-    needs: create-bundlers-list
-    # strategy:
-    #   matrix: 
-    #     include: ${{ fromJson(needs.create-bundlers-list.outputs.matrix) }}
+    name: TestBundler ${{matrix.bundler}}
+    needs: create-matrix
+    strategy:
+      matrix: 
+        include: ${{ fromJson(needs.create-matrix.outputs.matrix) }}
 
     runs-on: ubuntu-latest
     steps:
@@ -67,25 +68,24 @@ jobs:
           show-progress: false
 
       - id: runtest
-        name: testing ${{ matrix.bundler }}
+        name: Runtest:${{ matrix.bundler }}
         run: |
-          echo matrix=${{ needs.create-bundlers-list.outputs.matrix }}
           pytestArgs=${{inputs.pytest-args}}
           echo pytest-args=${pytestArgs:=-k gasp}
           OUTFOLDER=./build ./runbundler/runbundler.sh ${{ matrix.path }} test $pytestArgs
-          find *
-          echo -n "results=" >> "$GITHUB_OUTPUT"
-          jq -c . ./build/*.json >> "$GITHUB_OUTPUT"
-          echo -n "summary=" >> "$GITHUB_OUTPUT"
-          cat ./build/*.json | jq '.testsuites.testsuite | { "@name", "@tests", "@errors", "@failures", "@skipped", "@time" }' -c >> "$GITHUB_OUTPUT"
+          json=build/*.json          
+          echo -n "testresults=`jq -c . $json`" >> "$GITHUB_OUTPUT"
+          jqsummary='.testsuites.testsuite | {"@name","@tests","@errors","@failures","@skipped","@time"}'
+          echo "testsummary=`jq -c $jqsummary $json`" | tee $GITHUB_OUTPUT
 
-      # - uses: cloudposse/github-action-matrix-outputs-write@v1
-      #   id: matrix-output
-      #   with:
-      #     matrix-step-name: ${{ github.job }}
-      #     matrix-key: bundler
-      #     outputs: |-
-      #       ${{matrix.bundler}}: ${{ steps.runtest.outputs.results }}
+      - uses: cloudposse/github-action-matrix-outputs-write@v1
+        id: matrix-output
+        with:
+          matrix-step-name: bundler-tests
+          matrix-key: bundler
+          outputs: |-
+            testresults: ${{steps.runtest.outputs.testresults}}
+            testsummary: ${{steps.runtest.outputs.testsummary}}
 
       - name: Push build output to artifacts
         uses: actions/upload-artifact@v4
@@ -102,9 +102,8 @@ jobs:
         id: read
         with:
           matrix-step-name: bundler-tests
-          matrix-key: ${{ matrix.bundler }}
-      - run: echo "all outputs=${{steps.read.outputs.result}}"
-      - run: echo '${{toJson(steps.read.outputs)}}' | jq
+      - name: dump
+        run: echo '${{steps.read.outputs.result}}' | jq
     # outputs:
     #     result: "${{ toJSON(steps.read.outputs) }}"
 
