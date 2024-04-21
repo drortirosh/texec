@@ -81,8 +81,8 @@ jobs:
           echo jsonfile=$jsonfile
           cat $jsonfile
           echo "testresults=`jq -c . < $jsonfile`" >> $GITHUB_OUTPUT
-          # jqsummary='.testsuites.testsuite|{"@name","@tests","@errors","@failures","@skipped","@time"}'
-          # echo "testsummary=`jq -c \'$jqsummary\' < $jsonfile`" | tee $GITHUB_OUTPUT
+          summary=`jq -c '.testsuites.testsuite|{"@name","@tests","@errors","@failures","@skipped","@time"}' < $jsonfile`
+          echo "testsummary=$summary | tee $GITHUB_OUTPUT
 
       - uses: cloudposse/github-action-matrix-outputs-write@v1
         id: matrix-output
@@ -90,8 +90,8 @@ jobs:
           matrix-step-name: bundler-tests
           matrix-key: bundler
           outputs: |-
-            testresults: ${{steps.runtest.outputs.testresults}}
-            testsummary: ${{steps.runtest.outputs.testsummary}}
+            testresults: { "${{matrix.bundler}}": ${{steps.runtest.outputs.testresults}} }
+            testsummary: { "${{matrix.bundler}}": ${{steps.runtest.outputs.testsummary}} }
 
       - name: Push build output to artifacts
         uses: actions/upload-artifact@v4
