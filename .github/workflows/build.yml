@@ -39,7 +39,7 @@ jobs:
     needs: buildMatrix
     runs-on: ubuntu-latest
     steps:
-      - run: echo showing buildMatrix output=${{toJson(needs.buildMatrix.outputs)}}
+      - run: echo "showing buildMatrix output=${{toJson(needs.buildMatrix.outputs)}}"
 
   texec:
     needs: buildMatrix
