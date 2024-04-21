@@ -1,4 +1,4 @@
-name: Test Exec
+name: Run Bundlers Spec-Tests
 
 # Allow one concurrent
 concurrency:
@@ -67,7 +67,7 @@ jobs:
         name: testing ${{ matrix.bundler }}
         run: |
           OUTFOLDER=./build ./runbundler/runbundler.sh ${{ matrix.bundler }} test ${{ inputs.pytest-args }}
-          echo "results="`jq -c . ./build/out/*.json" >> "$GITHUB_OUTPUT"
+          echo "results="`jq -c . ./build/out/*.json`" >> "$GITHUB_OUTPUT"
 
       - uses: cloudposse/github-action-matrix-outputs-write@v1
         id: matrix-output
@@ -86,7 +86,7 @@ jobs:
   summary:
     runs-on: ubuntu-latest
     needs: [bundler-tests]
-
+    if: ${{always()}}
     steps:
       - uses: cloudposse/github-action-matrix-outputs-read@v1
         id: read
