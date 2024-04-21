@@ -1,0 +1,23 @@
+name: test matrix
+
+
+on:
+  push:
+    branches: '**'
+
+
+jobs:
+
+  tmatrix:
+    strategy:
+      matrix:
+        - name:
+            - big
+            - small
+        - value:
+            - 111
+            - 222
+    runs-on: ubuntu-latest
+    steps:
+      - name: step-${{ matrix.name }}-${{matrix.value}}
+        run: echo ${{ matrix.name }}-${{matrix.value}}
