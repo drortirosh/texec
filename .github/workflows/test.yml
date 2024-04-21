@@ -16,7 +16,7 @@ jobs:
       - id: setmatrix
         name: set outputs.matrix
         run: echo matrix='[{"name":"big", "val":"11"}, {"name":"small"}]' >> $GITHUB_OUTPUT
-      - name: =${{steps.setmatrix.outputs.matrix)}}
+      - name: value=${{steps.setmatrix.outputs.matrix}}
         run: echo '${{steps.setmatrix.outputs.matrix}}' | jq
 
   tmatrix:
