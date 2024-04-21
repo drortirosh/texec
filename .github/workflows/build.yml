@@ -53,7 +53,7 @@ jobs:
           echo matrix=$matrix | tee $GITHUB_OUTPUT
 
   bundler-tests:
-    name: TestBundler ${{matrix.bundler}}
+    name: [ ${{matrix.bundler}} ]
     # needs: create-matrix
     strategy:
       matrix: 
@@ -68,15 +68,19 @@ jobs:
           show-progress: false
 
       - id: runtest
-        name: Runtest:${{ matrix.bundler }}
+        name: Runtest: ${{ matrix.bundler }}
         run: |
           pytestArgs=${{inputs.pytest-args}}
           echo pytest-args=${pytestArgs:=-k gasp}
-          OUTFOLDER=./build ./runbundler/runbundler.sh ${{ matrix.path }} test $pytestArgs
-          json=build/*.json          
-          echo -n "testresults=`jq -c . $json`" >> "$GITHUB_OUTPUT"
-          jqsummary='.testsuites.testsuite | {"@name","@tests","@errors","@failures","@skipped","@time"}'
-          echo "testsummary=`jq -c $jqsummary $json`" | tee $GITHUB_OUTPUT
+          mkdir ./build
+          base=./build/${{matrix.bundler}}
+          OUTFOLDER=./build ./runbundler/runbundler.sh ${{ matrix.path }} test $pytestArgs | tee $base.txt
+          ./runbundler/runbundler.sh ${{matrix.path}} logs > $base.log
+          jsonfile=build/*.json
+          echo jsonfile=$jsonfile
+          echo -n "testresults=`jq -c . < $jsonfile`" >> "$GITHUB_OUTPUT"
+          jqsummary='.testsuites.testsuite|{"@name","@tests","@errors","@failures","@skipped","@time"}'
+          echo "testsummary=`jq -c \'$jqsummary\' < $jsonfile`" | tee $GITHUB_OUTPUT
 
       - uses: cloudposse/github-action-matrix-outputs-write@v1
         id: matrix-output
