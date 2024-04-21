@@ -67,13 +67,16 @@ jobs:
         name: testing ${{ matrix.bundler }}
         run: |
           OUTFOLDER=./build ./runbundler/runbundler.sh ${{ matrix.bundler }} test ${{ inputs.pytest-args }}
-          echo "results="`jq -c . ./build/out/*.json`" >> "$GITHUB_OUTPUT"
+          echo -n "results=" >> "$GITHUB_OUTPUT"
+          jq -c . ./build/out/*.json >> "$GITHUB_OUTPUT"
+          echo -n "summary=" >> "$GITHUB_OUTPUT"
+          cat ./build/out/*.json | jq '.testsuites.testsuite | { "@name", "@tests", "@errors", "@failures", "@skipped", "@time" }' -c >> "$GITHUB_OUTPUT"
 
       - uses: cloudposse/github-action-matrix-outputs-write@v1
         id: matrix-output
         with:
           matrix-step-name: ${{ github.job }}
-          matrix-key: ${{ matrix.bundler }}
+          matrix-key: bundler
           outputs: |-
             name: ${{ steps.runtest.outputs.results }}
 
@@ -94,7 +97,7 @@ jobs:
           matrix-step-name: bundler-tests
           matrix-key: ${{ matrix.bundler }}
       - run: echo "all outputs=${{steps.read.outputs.result}}"
-      - run: echo '${{steps.read.outputs.result}}' | jq
+      - run: echo '${{steps.read.outputs}}' | jq
     # outputs:
     #     result: "${{ toJSON(steps.read.outputs) }}"
 
