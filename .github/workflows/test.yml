@@ -21,12 +21,12 @@ jobs:
 
   tmatrix:
     name: someName
-    needs: makematrix
+    # needs: makematrix
     strategy:
       matrix:
-        include: ${{ fromJson(needs.makematrix.outputs.matrix)}}
-          # - { name: big, value: 333 }
-          # - { name: small, value: 1234 }
+        include: #${{ fromJson(needs.makematrix.outputs.matrix)}}
+          - { name: big, value: 333 }
+          - { name: small, value: 1234 }
     runs-on: ubuntu-latest
     steps:
       - name: step-${{ matrix.name }}-${{matrix.val}}
