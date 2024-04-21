@@ -54,4 +54,4 @@ jobs:
           matrix-step-name: exec
 
       - name: dump
-        run: echo 'summary=${{(steps.read.outputs.out)}}'
+        run: echo 'summary=${{toJson(steps.read.outputs)}}'
