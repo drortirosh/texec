@@ -55,4 +55,4 @@ jobs:
           matrix-step-name: tmatrix
 
       - name: dump
-        run: echo 'summary=${{steps.read.outputs.result}}'
+        run: echo '${{steps.read.outputs.result}}' | jq
