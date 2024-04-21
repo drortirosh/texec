@@ -26,7 +26,8 @@ jobs:
     outputs:
       version:  ${{         steps.setVersion.outputs.version }}
       tojson:   ${{  toJson(steps.setVersion.outputs.version)}}
-      fromjson: ${{fromJson(steps.setVersion.outputs.version)}}
+      #fails: outputs must be strings, not objects: "A sequence not accepted"
+      #fromjson: ${{fromJson(steps.setVersion.outputs.version)}}
     steps:
       - uses: actions/checkout@v4
         with:
