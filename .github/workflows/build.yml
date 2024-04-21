@@ -1,6 +1,11 @@
 name: Test Exec
 
-on: 
+# Allow one concurrent
+concurrency:
+  group: "mygroup"
+  cancel-in-progress: true
+
+on:
   workflow_dispatch:
     inputs:
       debug:
@@ -37,11 +42,11 @@ jobs:
       #https://stackoverflow.com/questions/59175332/using-output-from-a-previous-job-in-a-new-one-in-a-github-action
 
   staticMatrix:
-      strategy:
-          matrix:
-            item:
-              - first
-              - second
+    strategy:
+      matrix:
+        item:
+          - first
+          - second
     runs-on: ubuntu-latest
     steps:
       - run: echo ${{matrix.item}}
@@ -116,8 +121,3 @@ jobs:
           all = ${{ toJson(needs) }}
           EOF
 
-
-# Allow one concurrent 
-concurrency:
-  group: "mygroup"
-  cancel-in-progress: true
